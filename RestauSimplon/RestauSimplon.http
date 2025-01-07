@@ -1,0 +1,6 @@
+@RestauSimplon_HostAddress = http://localhost:5282
+
+GET {{RestauSimplon_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
