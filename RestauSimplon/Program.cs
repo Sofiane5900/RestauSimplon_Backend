@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using RestauSimplon;
+using Swashbuckle.AspNetCore.Annotations;
 
 var builder = WebApplication.CreateBuilder(args);
 
