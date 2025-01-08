@@ -11,12 +11,8 @@ namespace RestauSimplon
         public string Categorie { get; set; } = null!;
         public int Prix { get; set; }
     }
-<<<<<<< HEAD:RestauSimplon/Articles.cs
 
-    public class ArticlesItemDTO
-=======
     public class ArticleItemDTO
->>>>>>> db7a5b16d947cb0def00e120bd06a0475a528ad1:RestauSimplon/Article.cs
     {
         [SwaggerSchema("ID de l'article")]
         public int Id { get; set; }
@@ -30,12 +26,7 @@ namespace RestauSimplon
         [SwaggerSchema("Prix de l'article")]
         public int Prix { get; set; }
 
-<<<<<<< HEAD:RestauSimplon/Articles.cs
-        public ArticlesItemDTO(Articles articlesItem)
-=======
-
         public ArticleItemDTO(Article articleItem)
->>>>>>> db7a5b16d947cb0def00e120bd06a0475a528ad1:RestauSimplon/Article.cs
         {
             this.Id = articleItem.Id;
             this.Nom = articleItem.Nom;
@@ -44,8 +35,5 @@ namespace RestauSimplon
         }
     }
 }
-<<<<<<< HEAD:RestauSimplon/Articles.cs
 
 /* Ceci est un commentaire (lol) */
-=======
->>>>>>> db7a5b16d947cb0def00e120bd06a0475a528ad1:RestauSimplon/Article.cs
