@@ -1,6 +1,6 @@
-using RestauSimplon;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using RestauSimplon;
 using Swashbuckle.AspNetCore.Annotations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,3 +20,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.Run();
+
+
+
+/// public enum Type { Entree, Plat, Dessert }

@@ -2,7 +2,7 @@
 using Swashbuckle.AspNetCore.Annotations;
 namespace RestauSimplon
 {
-    public class Clients
+    public class Client
     {
         public int Id { get; }
 
@@ -12,7 +12,7 @@ namespace RestauSimplon
         public int Phone { get; set; }
 
     }
-    public class ClientsDTO
+    public class ClientDTO
     {
 
 
@@ -25,12 +25,12 @@ namespace RestauSimplon
         [SwaggerSchema("Telephone du Client ")]
         public int Phone { get; set; }
 
-        public ClientsDTO(Clients clients)
+        public ClientDTO(Client client)
         {
-            this.Nom = clients.Nom;
-            this.Prenom = clients.Prenom;
-            this.Adresse = clients.Adresse;
-            this.Phone = clients.Phone;
+            this.Nom = client.Nom;
+            this.Prenom = client.Prenom;
+            this.Adresse = client.Adresse;
+            this.Phone = client.Phone;
         }
 
 
