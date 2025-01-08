@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace RestauSimplon
 {
-    public class Articles
+    public class Article
     {
         public int Id { get; set; }
         public string Nom { get; set; } = null!;
         public string Categorie { get; set; } = null!;
         public int Prix { get; set; }
     }
-    public class ArticlesItemDTO
+    public class ArticleItemDTO
     {
         [SwaggerSchema("ID de l'article")]
         public int Id { get; set; }
@@ -25,14 +26,12 @@ namespace RestauSimplon
         public int Prix { get; set; }
 
 
-        public ArticlesItemDTO(Articles articlesItem)
+        public ArticleItemDTO(Article articleItem)
         {
-            this.Id = articlesItem.Id;
-            this.Nom = articlesItem.Nom;
-            this.Categorie = articlesItem.Categorie;
-            this.Prix = articlesItem.Prix;
+            this.Id = articleItem.Id;
+            this.Nom = articleItem.Nom;
+            this.Categorie = articleItem.Categorie;
+            this.Prix = articleItem.Prix;
         }
     }
 }
-
-/* Ceci est un commentaire (lol) */
