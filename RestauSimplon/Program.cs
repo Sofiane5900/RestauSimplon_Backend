@@ -23,4 +23,4 @@ app.Run();
 
 
 
-/// public enum Type { Entree, Plat, Dessert }
+/// public enum Type { Entree, Plat, Dessert } dans le OnModelCreating

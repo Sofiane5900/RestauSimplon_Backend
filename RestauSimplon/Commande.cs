@@ -13,17 +13,23 @@ namespace RestaurantAPI_Training
         // Ceci réprésente la clé étrangère de la table Client
         public int ClientId { get; set; }
 
+        // Ceci réprésente la clé étrangère de la table Article
+        public int ArticleId { get; set; }
+
         // Ceci represente la relation avec la table Client
-        public Client Client { get; set; } = null!;
+        public Client Client { get; set; }
 
         // Ceci represente la relation avec la table Article
-        public ICollection<Article> Articles { get; set; } = null!;
+        public ICollection<Article> Articles { get; set; }
     }
 
     public class CommandeItemDTO
     {
         [SwaggerSchema("Client de la commande")]
-        public Client Client { get; set; } = null!;
+        public Client Client { get; set; }
+
+        [SwaggerSchema("Liste des articles de la commande")]
+        public ICollection<Article> Articles { get; set; }
 
         [SwaggerSchema("Date de la commande")]
         public DateTime Date { get; set; }
@@ -33,6 +39,8 @@ namespace RestaurantAPI_Training
 
         public CommandeItemDTO(CommandeItemDTO commandeItem)
         {
+            this.Client = commandeItem.Client;
+            this.Articles = commandeItem.Articles;
             this.Date = commandeItem.Date;
             this.PrixTotal = commandeItem.PrixTotal;
         }

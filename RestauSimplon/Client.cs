@@ -7,9 +7,9 @@ namespace RestauSimplon
     public class Client
     {
         public int Id { get; }
-        public string Nom { get; set; } = null!;
-        public string Prenom { get; set; } = null!;
-        public string Adresse { get; set; } = null!;
+        public string Nom { get; set; }
+        public string Prenom { get; set; }
+        public string Adresse { get; set; }
         public int Phone { get; set; }
 
         public ICollection<Commande> Commandes { get; set; }
@@ -18,13 +18,13 @@ namespace RestauSimplon
     public class ClientDTO
     {
         [SwaggerSchema("Nom du Client")]
-        public string Nom { get; set; } = null!;
+        public string Nom { get; set; }
 
         [SwaggerSchema("Prenom du Client")]
-        public string Prenom { get; set; } = null!;
+        public string Prenom { get; set; }
 
         [SwaggerSchema("L'adresse du Client ")]
-        public string Adresse { get; set; } = null!;
+        public string Adresse { get; set; }
 
         [SwaggerSchema("Telephone du Client ")]
         public int Phone { get; set; }

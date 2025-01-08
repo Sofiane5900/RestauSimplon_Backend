@@ -32,7 +32,8 @@ namespace RestauSimplon
                 .Entity<Commande>()
                 .HasOne(c => c.Client) // Une commande est passée par un client
                 .WithMany(cl => cl.Commandes) // Un client peut passer plusieurs commandes
-                .HasForeignKey(c => c.ClientId);
+                .HasForeignKey(c => c.ClientId) // La clé étrangère de la table Commande est ClientId
+                .HasForeignKey(c => c.ArticleId); // La clé étrangère de la table Article est ArticleId
             modelBuilder.Entity<Commande>().HasMany(c => c.Articles); // Une commande peut contenir plusieurs articles
 
             modelBuilder
