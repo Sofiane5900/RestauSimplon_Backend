@@ -49,14 +49,14 @@ namespace RestauSimplon
             modelBuilder.Entity<Client>().Property(c => c.Phone).IsRequired();
             //Validations Article
             modelBuilder.Entity<Article>().Property(a => a.Nom).IsRequired();
-            modelBuilder.Entity<Article>().Property(a => a.Categorie).IsRequired();
+            modelBuilder.Entity<Article>().Property(a => a.CategorieId).IsRequired();
             modelBuilder.Entity<Article>().Property(a => a.Prix).IsRequired();
             //Validations Categorie
             modelBuilder.Entity<Categorie>().Property(c => c.Nom).IsRequired();
             //Validations Commande
             modelBuilder.Entity<Commande>().Property(c => c.Date).IsRequired();
             modelBuilder.Entity<Commande>().Property(c => c.PrixTotal).IsRequired();
-            modelBuilder.Entity<Commande>().Property(c => c.Articles).IsRequired(); // Une commande doit au moins avoir un article
+            modelBuilder.Entity<Commande>().Property(c => c.ArticleId).IsRequired(); // Une commande doit au moins avoir un article
         }
     }
 }
