@@ -11,6 +11,11 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+builder.Services.AddDbContext<RestauDbContext>(options =>
+{
+    options.UseSqlite("Data Source=RestauSimplonDb.db");
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
