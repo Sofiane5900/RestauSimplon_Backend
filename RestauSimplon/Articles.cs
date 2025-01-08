@@ -10,6 +10,7 @@ namespace RestauSimplon
         public string Categorie { get; set; } = null!;
         public int Prix { get; set; }
     }
+
     public class ArticlesItemDTO
     {
         [SwaggerSchema("ID de l'article")]
@@ -23,7 +24,6 @@ namespace RestauSimplon
 
         [SwaggerSchema("Prix de l'article")]
         public int Prix { get; set; }
-
 
         public ArticlesItemDTO(Articles articlesItem)
         {
