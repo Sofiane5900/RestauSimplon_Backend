@@ -18,6 +18,13 @@ namespace RestauSimplon
         public int Prix { get; set; }
 
         public ArticlesItemDTO() { }
-        public ArticlesItemDTO(Articles articlesItem) => (Id, Nom, Categorie, Prix) = (articlesItem.Id, articlesItem.Nom, articlesItem.Categorie, articlesItem.Prix);
+
+        public ArticlesItemDTO(Articles articlesItem) =>
+            (Id, Nom, Categorie, Prix) = (
+                articlesItem.Id,
+                articlesItem.Nom,
+                articlesItem.Categorie,
+                articlesItem.Prix
+            );
     }
 }
