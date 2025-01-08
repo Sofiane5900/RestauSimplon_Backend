@@ -8,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddDbContext<RestauDbContext>(options =>
+{
+    options.UseSqlite("Data Source=RestauSimplonDb.db");
+});
 
 var app = builder.Build();
 
@@ -23,4 +27,4 @@ app.Run();
 
 
 
-/// public enum Type { Entree, Plat, Dessert }
+/// public enum Type { Entree, Plat, Dessert } dans le OnModelCreating
