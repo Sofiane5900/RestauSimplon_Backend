@@ -52,44 +52,56 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-// GET - Tout les articles
-app.MapGet(
-    "/articles",
-    [SwaggerOperation(
-        Summary = "Récupère la liste des articles",
-        Description = "Récupère la liste de tout les articles du restaurant",
-        OperationId = "GetArticles",
-        Tags = new[] { "Articles" }
-    )]
-    async (RestauDbContext db) =>
-    {
-        return await db.Article.ToListAsync();
-    }
-);
+RouteGroupBuilder articles = app.MapGroup("/articles");
+articles.MapGet("/", GetAllArticles);
+articles.MapGet("/{id}", GetArticlesById);
+articles.MapPost("/", PostArticles);
+
+// GET - Recupére tout les articles
+[SwaggerOperation(
+    Summary = "Récupère la liste des articles",
+    Description = "Récupère la liste de tout les articles du restaurant",
+    OperationId = "GetArticles",
+    Tags = new[] { "Articles" }
+)]
+[SwaggerResponse(200, "Succès! Liste des articles recupérée", typeof(IEnumerable<ArticleItemDTO>))]
+static async Task<IResult> GetAllArticles(RestauDbContext db)
+{
+    return TypedResults.Ok(await db.Article.Select(x => new ArticleItemDTO(x)).ToArrayAsync());
+}
 
 // GET - Rechercher un article spécifique (par son id)
-app.MapGet(
-    "/articles/{id}",
-    [SwaggerOperation(
-        Summary = "Récupère un article par son ID",
-        Description = "Récupere un article spécifique par son ID",
-        OperationId = "GetArticlesById",
-        Tags = new[] { "Articles" }
-    )]
-    async (int Id, RestauDbContext db) =>
-        await db.Article.FindAsync(Id) is Article article ? Results.Ok(article) : Results.NotFound()
-);
+[SwaggerOperation(
+    Summary = "Récupere un article par son Id",
+    Description = "Récupère un article spécifique du Restaurant en spécifiant son Id ",
+    OperationId = "GetArticlesById",
+    Tags = new[] { "Articles" }
+)]
+[SwaggerResponse(
+    200,
+    "L'Article a était trouvée avec succés !",
+    typeof(IEnumerable<ArticleItemDTO>)
+)]
+static async Task<IResult> GetArticlesById(int id, RestauDbContext db)
+{
+    var article = await db.Article.FindAsync(id);
+    if (article == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(new ArticleItemDTO(article));
+}
 
 // POST - Ajouter un article
-app.MapPost(
-    "/articles",
-    async (Article article, RestauDbContext db) =>
-    {
-        db.Article.Add(article);
-        await db.SaveChangesAsync();
-        return Results.Created($"/articles/{article.Id}", article);
-    }
-);
+
+static Task<IResult> PostArticles(Article article, RestauDbContext db)
+{
+    db.Article.Add(article);
+    db.SaveChanges();
+    return Task.FromResult<IResult>(
+        Results.Created($"/articles/{article.Id}", new ArticleItemDTO(article))
+    );
+}
 
 app.UseHttpsRedirection();
 
