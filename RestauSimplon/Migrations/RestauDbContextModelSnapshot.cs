@@ -33,8 +33,8 @@ namespace RestauSimplon.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Prix")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("Prix")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 

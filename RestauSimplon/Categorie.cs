@@ -12,21 +12,17 @@ namespace RestauSimplon
 
     public class CategorieDTO
     {
-        [SwaggerSchema("Id de la catégorie")]
-        public int Id { get; set; }
-
         [SwaggerSchema("Nom de la catégorie")]
         public string Nom { get; set; }
 
-        [SwaggerSchema("Liste des articles de la catégorie")]
-        [JsonIgnore]
-        public ICollection<Article> Articles { get; set; }
+        //[SwaggerSchema("Liste des articles de la catégorie")]
+        //[JsonIgnore]
+        //public ICollection<Article> Articles { get; set; }
 
         public CategorieDTO() { }
 
         public CategorieDTO(Categorie categorie)
         {
-            this.Id = categorie.Id;
             this.Nom = categorie.Nom;
         }
     }

@@ -14,9 +14,26 @@ POST {{RestauSimplon_HostAddress}}/articles
 Content-Type: application/json
 
 {
-  
+
 }
 
 ###
 
 
+
+GET {{RestauSimplon_HostAddress}}/categories
+
+###
+
+POST {{RestauSimplon_HostAddress}}/categories
+Content-Type: application/json
+
+{
+  //CategorieDTO
+}
+
+###
+
+GET {{RestauSimplon_HostAddress}}/categories/{{id}}
+
+###
