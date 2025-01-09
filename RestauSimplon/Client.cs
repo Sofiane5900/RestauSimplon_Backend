@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using RestaurantAPI_Training;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace RestauSimplon

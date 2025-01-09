@@ -67,6 +67,10 @@ articles.MapPost("/", PostArticles);
 [SwaggerResponse(200, "Succès! Liste des articles recupérée", typeof(IEnumerable<ArticleItemDTO>))]
 static async Task<IResult> GetAllArticles(RestauDbContext db)
 {
+    if (await db.Article.CountAsync() == 0)
+    {
+        return Results.NotFound();
+    }
     return TypedResults.Ok(await db.Article.Select(x => new ArticleItemDTO(x)).ToArrayAsync());
 }
 
@@ -93,7 +97,13 @@ static async Task<IResult> GetArticlesById(int id, RestauDbContext db)
 }
 
 // POST - Ajouter un article
-
+[SwaggerOperation(
+    Summary = "Ajout d'un article",
+    Description = "Ajouter un nouveau article pour le restaurant",
+    OperationId = "PostArticles",
+    Tags = new[] { "Articles" }
+)]
+[SwaggerResponse(200, "L'Article a était crée avec succés !", typeof(IEnumerable<ArticleItemDTO>))]
 static Task<IResult> PostArticles(Article article, RestauDbContext db)
 {
     db.Article.Add(article);

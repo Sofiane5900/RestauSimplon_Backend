@@ -86,13 +86,10 @@ namespace RestauSimplon.Migrations
                     b.ToTable("Client", (string)null);
                 });
 
-            modelBuilder.Entity("RestaurantAPI_Training.Commande", b =>
+            modelBuilder.Entity("RestauSimplon.Commande", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ArticleId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ClientId")
@@ -101,14 +98,29 @@ namespace RestauSimplon.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PrixTotal")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("PrixTotal")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArticleId");
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Commande", (string)null);
+                });
+
+            modelBuilder.Entity("RestauSimplon.CommandeArticle", b =>
+                {
+                    b.Property<int>("CommandeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CommandeId", "ArticleId");
+
+                    b.HasIndex("ArticleId");
+
+                    b.ToTable("CommandeArticle", (string)null);
                 });
 
             modelBuilder.Entity("RestauSimplon.Article", b =>
@@ -119,22 +131,46 @@ namespace RestauSimplon.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RestaurantAPI_Training.Commande", null)
+                    b.HasOne("RestauSimplon.Commande", null)
                         .WithMany("Articles")
                         .HasForeignKey("CommandeId");
 
                     b.Navigation("Categorie");
                 });
 
-            modelBuilder.Entity("RestaurantAPI_Training.Commande", b =>
+            modelBuilder.Entity("RestauSimplon.Commande", b =>
                 {
                     b.HasOne("RestauSimplon.Client", "Client")
                         .WithMany("Commandes")
-                        .HasForeignKey("ArticleId")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("RestauSimplon.CommandeArticle", b =>
+                {
+                    b.HasOne("RestauSimplon.Article", "Article")
+                        .WithMany("CommandeArticles")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RestauSimplon.Commande", "Commande")
+                        .WithMany("CommandeArticles")
+                        .HasForeignKey("CommandeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("Commande");
+                });
+
+            modelBuilder.Entity("RestauSimplon.Article", b =>
+                {
+                    b.Navigation("CommandeArticles");
                 });
 
             modelBuilder.Entity("RestauSimplon.Categorie", b =>
@@ -147,9 +183,11 @@ namespace RestauSimplon.Migrations
                     b.Navigation("Commandes");
                 });
 
-            modelBuilder.Entity("RestaurantAPI_Training.Commande", b =>
+            modelBuilder.Entity("RestauSimplon.Commande", b =>
                 {
                     b.Navigation("Articles");
+
+                    b.Navigation("CommandeArticles");
                 });
 #pragma warning restore 612, 618
         }

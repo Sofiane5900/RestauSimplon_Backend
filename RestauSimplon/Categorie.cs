@@ -22,6 +22,8 @@ namespace RestauSimplon
         [JsonIgnore]
         public ICollection<Article> Articles { get; set; }
 
+        public CategorieDTO() { }
+
         public CategorieDTO(Categorie categorie)
         {
             this.Id = categorie.Id;
