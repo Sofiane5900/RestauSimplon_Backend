@@ -57,7 +57,7 @@ app.MapGet(
     "/articles",
     [SwaggerOperation(
         Summary = "Récupère la liste des articles",
-        Description = "Récupère la liste des articles du restaurant",
+        Description = "Récupère la liste de tout les articles du restaurant",
         OperationId = "GetArticles",
         Tags = new[] { "Articles" }
     )]
@@ -70,8 +70,25 @@ app.MapGet(
 // GET - Rechercher un article spécifique (par son id)
 app.MapGet(
     "/articles/{id}",
+    [SwaggerOperation(
+        Summary = "Récupère un article par son ID",
+        Description = "Récupere un article spécifique par son ID",
+        OperationId = "GetArticlesById",
+        Tags = new[] { "Articles" }
+    )]
     async (int Id, RestauDbContext db) =>
         await db.Article.FindAsync(Id) is Article article ? Results.Ok(article) : Results.NotFound()
+);
+
+// POST - Ajouter un article
+app.MapPost(
+    "/articles",
+    async (Article article, RestauDbContext db) =>
+    {
+        db.Article.Add(article);
+        await db.SaveChangesAsync();
+        return Results.Created($"/articles/{article.Id}", article);
+    }
 );
 
 app.UseHttpsRedirection();
