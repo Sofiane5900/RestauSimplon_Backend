@@ -22,7 +22,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.MapRouteCommandes(); // Appel à la méthode d'extension pour enregistrer les routes
 app.Run();
 
 

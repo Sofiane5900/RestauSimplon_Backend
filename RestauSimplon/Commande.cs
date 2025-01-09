@@ -37,12 +37,14 @@ namespace RestaurantAPI_Training
         [SwaggerSchema("Prix total de la commande")]
         public int PrixTotal { get; set; }
 
-        public CommandeItemDTO(CommandeItemDTO commandeItem)
+        // Constructeur prenant une instance de Commande
+        public CommandeItemDTO(Commande commande)
         {
-            this.Client = commandeItem.Client;
-            this.Articles = commandeItem.Articles;
-            this.Date = commandeItem.Date;
-            this.PrixTotal = commandeItem.PrixTotal;
+            this.Client = commande.Client;
+            this.Articles = commande.Articles;
+            this.Date = commande.Date;
+            this.PrixTotal = commande.PrixTotal;
         }
     }
+
 }
