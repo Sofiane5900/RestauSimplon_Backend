@@ -67,6 +67,13 @@ app.MapGet(
     }
 );
 
+// GET - Rechercher un article spécifique (par son id)
+app.MapGet(
+    "/articles/{id}",
+    async (int Id, RestauDbContext db) =>
+        await db.Article.FindAsync(Id) is Article article ? Results.Ok(article) : Results.NotFound()
+);
+
 app.UseHttpsRedirection();
 
 app.Run();
