@@ -7,96 +7,115 @@ using RestaurantAPI_Training;
 
 public static class RouteCommandes
 {
-    public static void MapRouteCommandes(this IEndpointRouteBuilder routes)
+    public static RouteGroupBuilder CommandesRoutes(this RouteGroupBuilder group)
     {
-        RouteGroupBuilder commande = routes.MapGroup("/commandes");
-        commande.MapGet("/", GetAllCommandes);
+        group.MapGet("/", GetAllCommandes);
+        group.MapGet("/{id}", GetCommandeById);
+        group.MapPost("/", CreateCommande);
+        group.MapPut("/{id}", UpdateCommande);
+        group.MapDelete("/{id}", DeleteCommande);
+        return group;
+    }
 
-        // GET - Recupére tout les commandes
-        [SwaggerOperation(
-            Summary = "Récupère la liste des commandes",
-            Description = "Récupère la liste de tout les commandes du restaurant",
-            OperationId = "GetCommandes",
-            Tags = new[] { "Commandes" }
-        )]
-        static async Task<IResult> GetAllCommandes(RestauDbContext db)
+    // GET - Recupére toutes les commandes
+    [SwaggerOperation(
+        Summary = "Récupère la liste des commandes",
+        Description = "Récupère la liste de toutes les commandes du restaurant",
+        OperationId = "GetAllCommandes",
+        Tags = new[] { "Commandes" }
+    )]
+    [SwaggerResponse(200, "OK", typeof(IEnumerable<CommandeItemDTO>))]
+    static async Task<IResult> GetAllCommandes(RestauDbContext db)
+    {
+        if (await db.Commande.CountAsync() == 0)
         {
-            return TypedResults.Ok(await db.Commande.ToListAsync());
+            return Results.NotFound();
+        }
+        return TypedResults.Ok(await db.Commande.ToArrayAsync());
+    }
+
+    // GET - Rechercher une commande spécifique (par son id)
+    [SwaggerOperation(
+        Summary = "Récupere une commande par son Id",
+        Description = "Récupère une commande spécifique du Restaurant en spécifiant son Id ",
+        OperationId = "GetCommandeById",
+        Tags = new[] { "Commandes" }
+    )]
+    [SwaggerResponse(200, "OK!", typeof(IEnumerable<CommandeItemDTO>))]
+    static async Task<IResult> GetCommandeById(int Id, RestauDbContext db)
+    {
+        var commande = await db.Commande.FindAsync(Id);
+        if (commande == null)
+        {
+            return Results.NotFound();
+        }
+        return Results.Ok(new CommandeItemDTO(commande));
+    }
+
+    // POST - Ajouter une commande
+    [SwaggerOperation(
+        Summary = "Ajout d'une commande",
+        Description = "Ajouter une nouvelle commande pour le restaurant",
+        OperationId = "CreateCommande",
+        Tags = new[] { "Commandes" }
+    )]
+    [SwaggerResponse(200, "OK!", typeof(IEnumerable<CommandeItemDTO>))]
+    static Task<IResult> CreateCommande(CommandeItemDTO commandeDTO, RestauDbContext db)
+    {
+        var commande = new Commande
+        {
+            Date = commandeDTO.Date,
+            PrixTotal = commandeDTO.PrixTotal,
+            ClientId = commandeDTO.ClientId,
+        };
+        db.Add(commande);
+        db.SaveChanges();
+        return Task.FromResult<IResult>(
+            Results.Created($"/commandes/{commande.Id}", new CommandeItemDTO(commande))
+        );
+    }
+
+    // PUT - Mettre à jour une commande
+    [SwaggerOperation(
+        Summary = "Mettre a jour une commande",
+        Description = "Mettre a jour une commande pour le restaurant",
+        OperationId = "UpdateCommande",
+        Tags = new[] { "Commandes" }
+    )]
+    [SwaggerResponse(200, "OK!", typeof(IEnumerable<CommandeItemDTO>))]
+    static async Task<IResult> UpdateCommande(int Id, CommandeItemDTO commandeDTO, RestauDbContext db)
+    {
+        var commandeToUpdate = db.Commande.Find(Id);
+        if (commandeToUpdate == null)
+        {
+            return Results.NotFound();
         }
 
-        [SwaggerOperation(
-            Summary = "Récupère une commande par ID",
-            Description = "Récupère une commande spécifique en utilisant son ID",
-            OperationId = "GetIdCommande",
-            Tags = new[] { "Commandes" }
-        )]
-        static async Task<IResult> GetIdCommande(RestauDbContext db, int Id)
+        commandeToUpdate.Date = commandeDTO.Date;
+        commandeToUpdate.PrixTotal = commandeDTO.PrixTotal;
+        commandeToUpdate.ClientId = commandeDTO.ClientId;
+        await db.SaveChangesAsync();
+        return TypedResults.NoContent();
+    }
+
+    // DELETE - Supprimer une commande
+    [SwaggerOperation(
+        Summary = "Suppression d'une commande",
+        Description = "Suppression d'une commande pour le restaurant",
+        OperationId = "DeleteCommande",
+        Tags = new[] { "Commandes" }
+    )]
+    [SwaggerResponse(200, "OK!", typeof(IEnumerable<CommandeItemDTO>))]
+    static async Task<IResult> DeleteCommande(int Id, RestauDbContext db)
+    {
+        var commande = await db.Commande.FindAsync(Id);
+        if (commande == null)
         {
-            return TypedResults.Ok(await db.Commande.FindAsync(Id));
+            return Results.NotFound();
         }
-
-        [SwaggerOperation(
-            Summary = "Supprime une commande par ID",
-            Description = "Supprime une commande spécifique en utilisant son ID",
-            OperationId = "DeleteIdCommande",
-            Tags = new[] { "Commandes" }
-        )]
-        static async Task<IResult> DeleteIdCommande(RestauDbContext db, int Id)
-        {
-            if (await db.Commande.FindAsync(Id) is Commande commande)
-            {
-                db.Commande.Remove(commande);
-                await db.SaveChangesAsync();
-                return TypedResults.NoContent();
-            }
-
-            return TypedResults.NotFound();
-        }
-
-        [SwaggerOperation(
-            Summary = "Mise à jour d'une commande",
-            Description = "Met à jour une commande spécifique en utilisant son ID et les nouvelles données",
-            OperationId = "UpdateCommande",
-            Tags = new[] { "Commandes" }
-        )]
-        static async Task<IResult> UpdateCommande(int id, CommandeItemDTO commandeItemDTO, RestauDbContext db)
-        {
-            var commande = await db.Commande.FindAsync(id);
-
-            if (commande is null) return TypedResults.NotFound();
-
-            commande.ClientId = commandeItemDTO.ClientId;
-            commande.Articles = commandeItemDTO.Articles;
-
-            await db.SaveChangesAsync();
-
-            return TypedResults.NoContent();
-        }
-
-        [SwaggerOperation(
-            Summary = "Crée une nouvelle commande",
-            Description = "Crée une nouvelle commande en utilisant les données fournies",
-            OperationId = "CreateCommande",
-            Tags = new[] { "Commandes" }
-        )]
-        static async Task<IResult> CreateCommande(CommandeItemDTO commandeItemDTO, RestauDbContext db)
-        {
-            var commandeItem = new Commande
-            {
-                ClientId = commandeItemDTO.ClientId,
-                Articles = commandeItemDTO.Articles,
-                Client = commandeItemDTO.Client,
-                Date = commandeItemDTO.Date,
-                PrixTotal = commandeItemDTO.PrixTotal,
-            };
-
-            db.Commande.Add(commandeItem);
-            await db.SaveChangesAsync();
-
-            // Utiliser le nouveau constructeur ici
-            commandeItemDTO = new CommandeItemDTO(commandeItem);
-
-            return TypedResults.Created($"/commandes/{commandeItem.Id}", commandeItemDTO);
-        }
+        db.Commande.Remove(commande);
+        await db.SaveChangesAsync();
+        return TypedResults.NoContent();
     }
 }
+
