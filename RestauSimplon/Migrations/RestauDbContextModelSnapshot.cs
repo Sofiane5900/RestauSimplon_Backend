@@ -17,7 +17,7 @@ namespace RestauSimplon.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
-            modelBuilder.Entity("RestauSimplon.Article", b =>
+            modelBuilder.Entity("RestauSimplon.Models.Article", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,8 +33,8 @@ namespace RestauSimplon.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Prix")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("Prix")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -45,7 +45,7 @@ namespace RestauSimplon.Migrations
                     b.ToTable("Article", (string)null);
                 });
 
-            modelBuilder.Entity("RestauSimplon.Categorie", b =>
+            modelBuilder.Entity("RestauSimplon.Models.Categorie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,7 @@ namespace RestauSimplon.Migrations
                     b.ToTable("Categorie", (string)null);
                 });
 
-            modelBuilder.Entity("RestauSimplon.Client", b =>
+            modelBuilder.Entity("RestauSimplon.Models.Client", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -74,8 +74,9 @@ namespace RestauSimplon.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Phone")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Prenom")
                         .IsRequired()
@@ -86,13 +87,10 @@ namespace RestauSimplon.Migrations
                     b.ToTable("Client", (string)null);
                 });
 
-            modelBuilder.Entity("RestaurantAPI_Training.Commande", b =>
+            modelBuilder.Entity("RestauSimplon.Models.Commande", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ArticleId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ClientId")
@@ -101,55 +99,96 @@ namespace RestauSimplon.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("PrixTotal")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("PrixTotal")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ArticleId");
+                    b.HasIndex("ClientId");
 
                     b.ToTable("Commande", (string)null);
                 });
 
-            modelBuilder.Entity("RestauSimplon.Article", b =>
+            modelBuilder.Entity("RestauSimplon.Models.CommandeArticle", b =>
                 {
-                    b.HasOne("RestauSimplon.Categorie", "Categorie")
+                    b.Property<int>("CommandeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CommandeId", "ArticleId");
+
+                    b.HasIndex("ArticleId");
+
+                    b.ToTable("CommandeArticle", (string)null);
+                });
+
+            modelBuilder.Entity("RestauSimplon.Models.Article", b =>
+                {
+                    b.HasOne("RestauSimplon.Models.Categorie", "Categorie")
                         .WithMany("Articles")
                         .HasForeignKey("CategorieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RestaurantAPI_Training.Commande", null)
+                    b.HasOne("RestauSimplon.Models.Commande", null)
                         .WithMany("Articles")
                         .HasForeignKey("CommandeId");
 
                     b.Navigation("Categorie");
                 });
 
-            modelBuilder.Entity("RestaurantAPI_Training.Commande", b =>
+            modelBuilder.Entity("RestauSimplon.Models.Commande", b =>
                 {
-                    b.HasOne("RestauSimplon.Client", "Client")
+                    b.HasOne("RestauSimplon.Models.Client", "Client")
                         .WithMany("Commandes")
-                        .HasForeignKey("ArticleId")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("RestauSimplon.Categorie", b =>
+            modelBuilder.Entity("RestauSimplon.Models.CommandeArticle", b =>
+                {
+                    b.HasOne("RestauSimplon.Models.Article", "Article")
+                        .WithMany("CommandeArticles")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RestauSimplon.Models.Commande", "Commande")
+                        .WithMany("CommandeArticles")
+                        .HasForeignKey("CommandeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("Commande");
+                });
+
+            modelBuilder.Entity("RestauSimplon.Models.Article", b =>
+                {
+                    b.Navigation("CommandeArticles");
+                });
+
+            modelBuilder.Entity("RestauSimplon.Models.Categorie", b =>
                 {
                     b.Navigation("Articles");
                 });
 
-            modelBuilder.Entity("RestauSimplon.Client", b =>
+            modelBuilder.Entity("RestauSimplon.Models.Client", b =>
                 {
                     b.Navigation("Commandes");
                 });
 
-            modelBuilder.Entity("RestaurantAPI_Training.Commande", b =>
+            modelBuilder.Entity("RestauSimplon.Models.Commande", b =>
                 {
                     b.Navigation("Articles");
+
+                    b.Navigation("CommandeArticles");
                 });
 #pragma warning restore 612, 618
         }
