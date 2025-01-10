@@ -72,6 +72,12 @@ namespace RestauSimplon.Routes
                 CategorieId = articleDTO.CategorieId,
             };
 
+            // Si un champ est vide ou le prix est à 0, j'envoie une bad request (400)
+            if (string.IsNullOrEmpty(article.Nom) || article.Prix == 0 || article.CategorieId == 0)
+            {
+                return Task.FromResult<IResult>(Results.BadRequest());
+            }
+
             db.Article.Add(article);
             db.SaveChanges();
             return Task.FromResult<IResult>(
