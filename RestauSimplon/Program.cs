@@ -57,7 +57,7 @@ if (app.Environment.IsDevelopment())
 app.MapGroup("/categories").CategoriesRoutes();
 app.MapGroup("/articles").ArticlesRoutes();
 app.MapGroup("/clients").ClientsRoutes();
-
+app.MapGroup("/commande").CommandesRoutes();
 app.UseHttpsRedirection();
 
 app.Run();

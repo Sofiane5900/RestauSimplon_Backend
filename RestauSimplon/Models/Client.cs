@@ -16,6 +16,7 @@ namespace RestauSimplon.Models
 
     public class ClientDTO
     {
+        public int Id { get; }
         [SwaggerSchema("Nom du Client")]
         public string Nom { get; set; }
 
@@ -28,10 +29,12 @@ namespace RestauSimplon.Models
         [SwaggerSchema("Telephone du Client ")]
         public string Phone { get; set; }
 
+
         public ClientDTO() { }
 
         public ClientDTO(Client client)
         {
+            Id = client.Id;
             Nom = client.Nom;
             Prenom = client.Prenom;
             Adresse = client.Adresse;

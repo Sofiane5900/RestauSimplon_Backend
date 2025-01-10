@@ -44,17 +44,19 @@ namespace RestauSimplon
                 .WithMany(c => c.Articles) // Une catégorie peut contenir plusieurs articles
                 .HasForeignKey(a => a.CategorieId); // La clé étrangère de la table Article est CategorieId
 
-            modelBuilder
-                .Entity<CommandeArticle>()
-                .HasOne(ca => ca.Commande) // Relation avec Commande
-                .WithMany(c => c.CommandeArticles) // Une commande peut contenir plusieurs articles
+            modelBuilder.Entity<CommandeArticle>()
+                .HasKey(ca => new { ca.CommandeId, ca.ArticleId });
+
+            modelBuilder.Entity<CommandeArticle>()
+                .HasOne(ca => ca.Commande)
+                .WithMany(c => c.CommandeArticles)
                 .HasForeignKey(ca => ca.CommandeId);
 
-            modelBuilder
-                .Entity<CommandeArticle>()
-                .HasOne(ca => ca.Article) // Relation avec Article
-                .WithMany(a => a.CommandeArticles) // Un article peut être dans plusieurs commandes
+            modelBuilder.Entity<CommandeArticle>()
+                .HasOne(ca => ca.Article)
+                .WithMany(a => a.CommandeArticles)
                 .HasForeignKey(ca => ca.ArticleId);
+
 
             //Validations Client
             modelBuilder.Entity<Client>().Property(c => c.Nom).IsRequired();

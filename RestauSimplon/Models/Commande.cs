@@ -8,40 +8,45 @@ namespace RestauSimplon.Models
         public int Id { get; set; }
         public DateTime Date { get; set; }
         public decimal PrixTotal { get; set; }
-
-        // Ceci réprésente la clé étrangère de la table Client
         public int ClientId { get; set; }
-
-        // Ceci represente la relation avec la table Client
         public Client Client { get; set; }
-
-        // Ceci represente la relation avec la table Article
-        public ICollection<Article> Articles { get; set; }
-
-        // Ceci represente la relation avec la table CommandeArticle
-        public ICollection<CommandeArticle> CommandeArticles { get; set; }
+        public ICollection<CommandeArticle> CommandeArticles { get; set; } // Assure-toi que cette propriété est définie
     }
+
 
     public class CommandeItemDTO
     {
+
         [SwaggerSchema("Client de la commande")]
-        public ClientDTO Client { get; set; }
+        public Client Client { get; set; }
 
-        [SwaggerSchema("Liste des articles de la commande")]
-        public ICollection<Article> Articles { get; set; }
-
+        public ICollection<CommandeArticle> CommandeArticles { get; set; }
         [SwaggerSchema("Date de la commande")]
         public DateTime Date { get; set; }
 
         [SwaggerSchema("Prix total de la commande")]
         public decimal PrixTotal { get; set; }
 
-        public CommandeItemDTO(CommandeItemDTO commandeItem)
+        public CommandeItemDTO(Commande commandeItem)
         {
             Client = commandeItem.Client;
-            Articles = commandeItem.Articles;
+            CommandeArticles = commandeItem.CommandeArticles;
             Date = commandeItem.Date;
             PrixTotal = commandeItem.PrixTotal;
         }
+
+    }
+    public class CommandeSummaryDTO
+    {
+        public int Id { get; set; }
+        public int ClientId { get; set; }
+        public ICollection<int> ArticleIds { get; set; }
+    }
+    public class CreateCommandeDTO
+    {
+        public int ClientId { get; set; }
+        public ICollection<int> ArticleIds { get; set; }
+        public DateTime Date { get; set; }
+        public decimal PrixTotal { get; set; }
     }
 }
