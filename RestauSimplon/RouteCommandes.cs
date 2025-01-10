@@ -71,6 +71,5 @@ public static class RouteCommandes
             return TypedResults.Created($"/commandes/{commandeItem.Id}", commandeItemDTO);
         }
 
-
     }
 }
