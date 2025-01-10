@@ -72,8 +72,8 @@ namespace RestauSimplon.Routes
                 CategorieId = articleDTO.CategorieId,
             };
 
-            // Si les champ nom/categorieId sont vide ou le prix est à 0, j'envoie une bad request (400)
-            if (string.IsNullOrEmpty(article.Nom) || article.Prix == 0 || article.CategorieId == 0)
+            // Si les champ nom/categorieId sont vide ou le prix est inférieur a 0, j'envoie une bad request (400)
+            if (string.IsNullOrEmpty(article.Nom) || article.Prix < 0 || article.CategorieId == 0)
             {
                 return Results.BadRequest(
                     "Erreur, veuillez renseignez tout les champs correctement."

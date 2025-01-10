@@ -59,7 +59,7 @@ namespace RestauSimplon.Routes
             Tags = new[] { "Clients" }
         )]
         [SwaggerResponse(200, "OK!", typeof(IEnumerable<ClientDTO>))]
-        static Task<IResult> CreateClient(ClientDTO clientDTO, RestauDbContext db)
+        static async Task<IResult> CreateClient(ClientDTO clientDTO, RestauDbContext db)
         {
             var client = new Client
             {
@@ -68,11 +68,21 @@ namespace RestauSimplon.Routes
                 Adresse = clientDTO.Adresse,
                 Phone = clientDTO.Phone,
             };
+
+            if (
+                string.IsNullOrEmpty(clientDTO.Nom)
+                || string.IsNullOrEmpty(clientDTO.Prenom)
+                || string.IsNullOrEmpty(clientDTO.Adresse)
+                || string.IsNullOrEmpty(clientDTO.Phone)
+            )
+            {
+                return Results.BadRequest(
+                    "Erreur, veuillez renseignez tout les champs correctement."
+                );
+            }
             db.Add(client);
-            db.SaveChanges();
-            return Task.FromResult<IResult>(
-                Results.Created($"/articles/{client.Id}", new ClientDTO(client))
-            );
+            await db.SaveChangesAsync();
+            return TypedResults.Created($"/articles/{client.Id}", new ClientDTO(client));
         }
 
         // PUT - Mettre à jour un client
