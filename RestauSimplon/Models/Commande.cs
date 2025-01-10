@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace RestauSimplon
+namespace RestauSimplon.Models
 {
     public class Commande
     {
@@ -38,10 +38,10 @@ namespace RestauSimplon
 
         public CommandeItemDTO(CommandeItemDTO commandeItem)
         {
-            this.Client = commandeItem.Client;
-            this.Articles = commandeItem.Articles;
-            this.Date = commandeItem.Date;
-            this.PrixTotal = commandeItem.PrixTotal;
+            Client = commandeItem.Client;
+            Articles = commandeItem.Articles;
+            Date = commandeItem.Date;
+            PrixTotal = commandeItem.PrixTotal;
         }
     }
 }

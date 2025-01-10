@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace RestauSimplon
+namespace RestauSimplon.Models
 {
     public class Article
     {
-        public int Id { get; set; }
+        public int Id { get; }
         public string Nom { get; set; }
         public decimal Prix { get; set; }
         public int CategorieId { get; set; }
@@ -19,7 +19,7 @@ namespace RestauSimplon
     public class ArticleItemDTO
     {
         [SwaggerSchema("Id de l'article")]
-        public int Id { get; set; }
+        public int Id { get; }
 
         [SwaggerSchema("Nom de l'article")]
         public string Nom { get; set; }

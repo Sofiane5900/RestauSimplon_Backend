@@ -1,6 +1,4 @@
-﻿using RestauSimplon;
-
-namespace RestauSimplon
+﻿namespace RestauSimplon.Models
 {
     public class CommandeArticle
     {

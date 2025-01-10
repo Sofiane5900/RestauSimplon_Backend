@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace RestauSimplon
+namespace RestauSimplon.Models
 {
+    // TODO : Virer l'objet commande (commandes : null dans l'API)
     public class Client
     {
         public int Id { get; }
         public string Nom { get; set; }
         public string Prenom { get; set; }
         public string Adresse { get; set; }
-        public int Phone { get; set; }
-
+        public string Phone { get; set; }
         public ICollection<Commande> Commandes { get; set; }
     }
 
@@ -26,18 +26,16 @@ namespace RestauSimplon
         public string Adresse { get; set; }
 
         [SwaggerSchema("Telephone du Client ")]
-        public int Phone { get; set; }
+        public string Phone { get; set; }
 
-        [SwaggerSchema("Liste des commandes du client")]
-        public ICollection<Commande> Commandes { get; set; }
+        public ClientDTO() { }
 
         public ClientDTO(Client client)
         {
-            this.Nom = client.Nom;
-            this.Prenom = client.Prenom;
-            this.Adresse = client.Adresse;
-            this.Phone = client.Phone;
-            this.Commandes = client.Commandes;
+            Nom = client.Nom;
+            Prenom = client.Prenom;
+            Adresse = client.Adresse;
+            Phone = client.Phone;
         }
     }
 }

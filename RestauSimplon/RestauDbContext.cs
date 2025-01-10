@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RestauSimplon.Models;
 
 namespace RestauSimplon
 {
