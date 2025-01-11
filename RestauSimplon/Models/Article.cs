@@ -6,7 +6,7 @@ namespace RestauSimplon.Models
 {
     public class Article
     {
-        public int Id { get; }
+        public int Id { get; set; }
         public string Nom { get; set; }
         public decimal Prix { get; set; }
         public int CategorieId { get; set; }
@@ -19,7 +19,7 @@ namespace RestauSimplon.Models
     public class ArticleItemDTO
     {
         [SwaggerSchema("Id de l'article")]
-        public int Id { get; }
+        public int Id { get; set; }
 
         [SwaggerSchema("Nom de l'article")]
         public string Nom { get; set; }
@@ -31,6 +31,13 @@ namespace RestauSimplon.Models
         public decimal Prix { get; set; }
 
         public ArticleItemDTO() { }
+
+        public class ArticleDTO
+        {
+            public required string Nom { get; set; }
+            public int CategorieId { get; set; }
+            public decimal Prix { get; set; }
+        }
 
         public ArticleItemDTO(Article articleItem)
         {
