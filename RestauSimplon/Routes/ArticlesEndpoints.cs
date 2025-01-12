@@ -63,7 +63,7 @@ namespace RestauSimplon.Routes
             Tags = new[] { "Articles" }
         )]
         [SwaggerResponse(200, "OK!", typeof(IEnumerable<ArticleItemDTO>))]
-        static async Task<IResult> CreateArticle(ArticleItemDTO articleDTO, RestauDbContext db)
+        static async Task<IResult> CreateArticle(ArticlePostDTO articleDTO, RestauDbContext db)
         {
             var article = new Article
             {

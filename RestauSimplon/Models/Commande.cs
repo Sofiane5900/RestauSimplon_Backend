@@ -6,12 +6,8 @@ namespace RestauSimplon.Models
     public class Commande
     {
         public int Id { get; }
-
-        // Ceci réprésente la clé étrangère de la table Client
-        public int ClientId { get; }
-
-        // Ceci represente la relation avec la table Client
-        public Client Client { get; set; }
+        public int ClientId { get; } // Ceci réprésente la clé étrangère de la table Client
+        public Client Client { get; set; } // Ceci represente la relation avec la table Client
         public DateTime Date { get; set; }
         public decimal PrixTotal { get; set; }
 

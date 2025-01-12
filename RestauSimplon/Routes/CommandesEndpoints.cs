@@ -34,8 +34,8 @@ namespace RestauSimplon.Routes
                 return Results.NotFound();
             }
             var commandes = await db
-                .Commande.Include(c => c.Client)
-                .Include(c => c.CommandeArticles)
+                .Commande.Include(c => c.Client) // Une commande a besoin d'un client
+                .Include(c => c.CommandeArticles) // Une commande a besoin de la table d'association CommandeArticles
                 .ThenInclude(ca => ca.Article)
                 .Select(c => new CommandeItemDTO
                 {
@@ -45,12 +45,12 @@ namespace RestauSimplon.Routes
                     Articles = c
                         .CommandeArticles.Select(ca => new ArticleItemDTO
                         {
-                            Id = ca.Article.Id, // Ensure Id is set
+                            Id = ca.Article.Id,
                             Nom = ca.Article.Nom,
-                            CategorieId = ca.Article.CategorieId, // Ensure CategorieId is set
+                            CategorieId = ca.Article.CategorieId,
                             Prix = ca.Article.Prix,
                         })
-                        .ToList(), // Convert to List
+                        .ToList(),
                     PrixTotal = c.PrixTotal,
                 })
                 .ToArrayAsync();
@@ -79,9 +79,9 @@ namespace RestauSimplon.Routes
                     Articles = c
                         .CommandeArticles.Select(ca => new ArticleItemDTO
                         {
-                            Id = ca.Article.Id, // Ensure Id is set
+                            Id = ca.Article.Id,
                             Nom = ca.Article.Nom,
-                            CategorieId = ca.Article.CategorieId, // Ensure CategorieId is set
+                            CategorieId = ca.Article.CategorieId,
                             Prix = ca.Article.Prix,
                         })
                         .ToList(), // Convert to List
@@ -184,11 +184,10 @@ namespace RestauSimplon.Routes
                 return Results.BadRequest("One or more articles not found");
             }
 
-            // Update the articles in the commande
             commandeToUpdate.CommandeArticles = articles
                 .Select(a => new CommandeArticle { Article = a, ArticleId = a.Id })
                 .ToList();
-            commandeToUpdate.PrixTotal = articles.Sum(a => a.Prix); // Update the total price
+            commandeToUpdate.PrixTotal = articles.Sum(a => a.Prix); // Methode Sum pour calculer le prix total
 
             await db.SaveChangesAsync();
             return TypedResults.NoContent();
