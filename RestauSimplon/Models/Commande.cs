@@ -5,15 +5,15 @@ namespace RestauSimplon.Models
 {
     public class Commande
     {
-        public int Id { get; set; }
-        public DateTime Date { get; set; }
-        public decimal PrixTotal { get; set; }
+        public int Id { get; }
 
         // Ceci réprésente la clé étrangère de la table Client
-        public int ClientId { get; set; }
+        public int ClientId { get; }
 
         // Ceci represente la relation avec la table Client
         public Client Client { get; set; }
+        public DateTime Date { get; set; }
+        public decimal PrixTotal { get; set; }
 
         // Ceci represente la relation avec la table Article
         public ICollection<Article> Articles { get; set; }
@@ -24,24 +24,10 @@ namespace RestauSimplon.Models
 
     public class CommandeItemDTO
     {
-        [SwaggerSchema("Client de la commande")]
-        public ClientDTO Client { get; set; }
-
-        [SwaggerSchema("Liste des articles de la commande")]
-        public ICollection<Article> Articles { get; set; }
-
-        [SwaggerSchema("Date de la commande")]
+        public int CommandeId { get; set; }
+        public string ClientName { get; set; }
         public DateTime Date { get; set; }
-
-        [SwaggerSchema("Prix total de la commande")]
+        public IEnumerable<ArticleItemDTO> Articles { get; set; }
         public decimal PrixTotal { get; set; }
-
-        public CommandeItemDTO(CommandeItemDTO commandeItem)
-        {
-            Client = commandeItem.Client;
-            Articles = commandeItem.Articles;
-            Date = commandeItem.Date;
-            PrixTotal = commandeItem.PrixTotal;
-        }
     }
 }
