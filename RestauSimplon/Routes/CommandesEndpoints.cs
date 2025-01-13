@@ -15,6 +15,7 @@ namespace RestauSimplon.Routes
             group.MapPost("/", CreateCommande);
             group.MapPut("/{id}", UpdateCommande);
             group.MapDelete("/{id}", DeleteCommande);
+            group.MapGet("/history", History);
             //group.MapGet("/history", GetCommandesHistory);
             return group;
         }
@@ -35,6 +36,45 @@ namespace RestauSimplon.Routes
             }
             var commandes = await db
                 .Commande.Include(c => c.Client) // Une commande a besoin d'un client
+                .Include(c => c.CommandeArticles) // Une commande a besoin de la table d'association CommandeArticles
+                .ThenInclude(ca => ca.Article)
+                .Select(c => new CommandeItemDTO
+                {
+                    CommandeId = c.Id,
+                    ClientName = c.Client.Nom,
+                    Date = c.Date,
+                    Articles = c
+                        .CommandeArticles.Select(ca => new ArticleItemDTO
+                        {
+                            Id = ca.Article.Id,
+                            Nom = ca.Article.Nom,
+                            CategorieId = ca.Article.CategorieId,
+                            Prix = ca.Article.Prix,
+                        })
+                        .ToList(),
+                    PrixTotal = c.PrixTotal,
+                })
+                .ToArrayAsync();
+            return TypedResults.Ok(commandes);
+        }
+        // GET - Recupére toutes les commandes
+        // GET - Récupérer l'historique des commandes
+        [SwaggerOperation(
+            Summary = "Récupère l'historique des commandes",
+            Description = "Récupère l'historique de toutes les commandes du restaurant",
+            OperationId = "GetCommandesHistory",
+            Tags = new[] { "Commandes" }
+        )]
+        [SwaggerResponse(200, "OK", typeof(IEnumerable<CommandeItemDTO>))]
+        static async Task<IResult> History(RestauDbContext db)
+        {
+            if (await db.Commande.CountAsync() == 0)
+            {
+                return Results.NotFound();
+            }
+            var commandes = await db
+                .Commande.Include(c => c.Client) // Une commande a besoin d'un client
+                .OrderByDescending(c => c.Date)
                 .Include(c => c.CommandeArticles) // Une commande a besoin de la table d'association CommandeArticles
                 .ThenInclude(ca => ca.Article)
                 .Select(c => new CommandeItemDTO
@@ -213,13 +253,6 @@ namespace RestauSimplon.Routes
             return TypedResults.NoContent();
         }
 
-        // GET - Récupérer l'historique des commandes
-        //[SwaggerOperation(
-        //    Summary = "Récupère l'historique des commandes",
-        //    Description = "Récupère l'historique de toutes les commandes du restaurant",
-        //    OperationId = "GetCommandesHistory",
-        //    Tags = new[] { "Commandes" }
-        //)]
-        //[SwaggerResponse(200, "OK", typeof(IEnumerable<CommandeItemDTO>))]
+
     }
 }
