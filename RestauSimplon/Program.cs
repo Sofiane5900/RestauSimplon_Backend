@@ -15,6 +15,7 @@ builder.Services.AddDbContext<RestauDbContext>(options =>
     options.UseSqlite("Data Source=RestauSimplonDb.db");
 });
 
+builder.Services.AddCors();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -53,6 +54,8 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.MapGroup("/categories").CategoriesRoutes();
 app.MapGroup("/articles").ArticlesRoutes();
