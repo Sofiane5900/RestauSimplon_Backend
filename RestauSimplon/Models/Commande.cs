@@ -32,11 +32,20 @@ namespace RestauSimplon.Models
         public DateTime Date { get; set; }
         public IEnumerable<ArticleItemDTO> Articles { get; set; }
         public decimal PrixTotal { get; set; }
+        public int Quantite { get; set; }
     }
 
     public class CommandePostDTO
     {
         public int ClientId { get; set; }
-        public required List<int> ArticleIds { get; set; }
+        public required List<ArticleQuantiteDTO> Articles { get; set; }
     }
+
+    public class ArticleQuantiteDTO
+    {
+        public int ArticleId { get; set; }
+        public int Quantite { get; set; }
+    }
+
+
 }

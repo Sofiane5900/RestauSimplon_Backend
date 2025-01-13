@@ -117,6 +117,9 @@ namespace RestauSimplon.Migrations
                     b.Property<int>("ArticleId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Quantite")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("CommandeId", "ArticleId");
 
                     b.HasIndex("ArticleId");

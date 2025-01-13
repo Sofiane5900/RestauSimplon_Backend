@@ -154,10 +154,9 @@ namespace RestauSimplon.Routes
                 return Results.BadRequest("Client not found");
             }
 
-            var articles = await db
-                .Article.Where(a => commandePostDTO.ArticleIds.Contains(a.Id))
-                .ToListAsync();
-            if (articles.Count != commandePostDTO.ArticleIds.Count)
+            var articleIds = commandePostDTO.Articles.Select(a => a.ArticleId).ToList();
+            var articles = await db.Article.Where(a => articleIds.Contains(a.Id)).ToListAsync();
+            if (articles.Count != articleIds.Count)
             {
                 return Results.BadRequest("One or more articles not found");
             }
@@ -166,14 +165,19 @@ namespace RestauSimplon.Routes
             {
                 Client = client,
                 Date = DateTime.Now,
-                PrixTotal = articles.Sum(a => a.Prix),
-                CommandeArticles = articles
-                    .Select(a => new CommandeArticle { Article = a, ArticleId = a.Id })
-                    .ToList(),
+                PrixTotal = commandePostDTO.Articles.Sum(aq => aq.Quantite * articles.First(a => a.Id == aq.ArticleId).Prix),
+                CommandeArticles = commandePostDTO.Articles
+                    .Select(aq => new CommandeArticle
+                    {
+                        ArticleId = aq.ArticleId,
+                        Quantite = aq.Quantite
+                    })
+                    .ToList()
             };
 
             db.Add(commande);
             await db.SaveChangesAsync();
+
             return Results.Created(
                 $"/commandes/{commande.Id}",
                 new CommandeItemDTO
@@ -181,19 +185,18 @@ namespace RestauSimplon.Routes
                     CommandeId = commande.Id,
                     ClientName = client.Nom,
                     Date = commande.Date,
-                    Articles = commande
-                        .CommandeArticles.Select(ca => new ArticleItemDTO
-                        {
-                            Id = ca.Article.Id,
-                            Nom = ca.Article.Nom,
-                            CategorieId = ca.Article.CategorieId,
-                            Prix = ca.Article.Prix,
-                        })
-                        .ToList(),
-                    PrixTotal = commande.PrixTotal,
+                    Articles = commande.CommandeArticles.Select(ca => new ArticleItemDTO
+                    {
+                        Id = ca.Article.Id,
+                        Nom = ca.Article.Nom,
+                        CategorieId = ca.Article.CategorieId,
+                        Prix = ca.Article.Prix
+                    }).ToList(),
+                    PrixTotal = commande.PrixTotal
                 }
             );
         }
+
 
         // PUT - Mettre à jour une commande
         [SwaggerOperation(

@@ -7,5 +7,6 @@
 
         public int ArticleId { get; set; }
         public Article Article { get; set; }
+        public int Quantite { get; set; }
     }
 }
