@@ -29,6 +29,9 @@ namespace RestauSimplon.Models
         [SwaggerSchema("ID de la catégorie")]
         public int CategorieId { get; set; }
 
+        [SwaggerSchema("Quantité de l'article")]
+        public int Quantite { get; set; }
+
         public ArticleItemDTO() { }
 
         public ArticleItemDTO(Article article)
@@ -52,5 +55,3 @@ namespace RestauSimplon.Models
         public decimal Prix { get; set; }
     }
 }
-
-/* Ceci est un commentaire (lol) */

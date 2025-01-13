@@ -155,9 +155,9 @@ namespace RestauSimplon.Routes
             }
 
             var articles = await db
-                .Article.Where(a => commandePostDTO.ArticleIds.Contains(a.Id))
+                .Article.Where(a => commandePostDTO.ArticleQuantities.Select(aq => aq.ArticleId).Contains(a.Id))
                 .ToListAsync();
-            if (articles.Count != commandePostDTO.ArticleIds.Count)
+            if (articles.Count != commandePostDTO.ArticleQuantities.Count)
             {
                 return Results.BadRequest("One or more articles not found");
             }
@@ -166,9 +166,17 @@ namespace RestauSimplon.Routes
             {
                 Client = client,
                 Date = DateTime.Now,
-                PrixTotal = articles.Sum(a => a.Prix),
-                CommandeArticles = articles
-                    .Select(a => new CommandeArticle { Article = a, ArticleId = a.Id })
+                // Calculate total price considering quantities
+                PrixTotal = commandePostDTO.ArticleQuantities
+                    .Sum(aq => articles.First(a => a.Id == aq.ArticleId).Prix * aq.Quantite),
+                CommandeArticles = commandePostDTO.ArticleQuantities
+                    .SelectMany(aq => Enumerable.Repeat(
+                        new CommandeArticle
+                        {
+                            Article = articles.First(a => a.Id == aq.ArticleId),
+                            ArticleId = aq.ArticleId
+                        },
+                        aq.Quantite))
                     .ToList(),
             };
 
@@ -182,12 +190,14 @@ namespace RestauSimplon.Routes
                     ClientName = client.Nom,
                     Date = commande.Date,
                     Articles = commande
-                        .CommandeArticles.Select(ca => new ArticleItemDTO
+                        .CommandeArticles.GroupBy(ca => ca.Article)
+                        .Select(g => new ArticleItemDTO
                         {
-                            Id = ca.Article.Id,
-                            Nom = ca.Article.Nom,
-                            CategorieId = ca.Article.CategorieId,
-                            Prix = ca.Article.Prix,
+                            Id = g.Key.Id,
+                            Nom = g.Key.Nom,
+                            CategorieId = g.Key.CategorieId,
+                            Prix = g.Key.Prix,
+                            Quantite = g.Count(), // Add Quantite to the DTO
                         })
                         .ToList(),
                     PrixTotal = commande.PrixTotal,
@@ -252,7 +262,5 @@ namespace RestauSimplon.Routes
             await db.SaveChangesAsync();
             return TypedResults.NoContent();
         }
-
-
     }
 }

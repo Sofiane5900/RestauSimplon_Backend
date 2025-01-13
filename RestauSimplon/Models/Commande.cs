@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic; // Added this line to include the Dictionary class
 
 namespace RestauSimplon.Models
 {
@@ -37,6 +38,17 @@ namespace RestauSimplon.Models
     public class CommandePostDTO
     {
         public int ClientId { get; set; }
-        public required List<int> ArticleIds { get; set; }
+
+        [SwaggerSchema("Dictionary of article IDs and their quantities")]
+        public required List<ArticleQuantite> ArticleQuantities { get; set; }
+    }
+
+    public class ArticleQuantite
+    {
+        [SwaggerSchema("Article ID")]
+        public int ArticleId { get; set; }
+
+        [SwaggerSchema("Quantite of the article")]
+        public int Quantite { get; set; }
     }
 }
