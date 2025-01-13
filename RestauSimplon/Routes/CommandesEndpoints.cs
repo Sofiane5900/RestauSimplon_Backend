@@ -15,7 +15,7 @@ namespace RestauSimplon.Routes
             group.MapPost("/", CreateCommande);
             group.MapPut("/{id}", UpdateCommande);
             group.MapDelete("/{id}", DeleteCommande);
-            group.MapGet("/history", History);
+            group.MapGet("/history", HistoryCommandes);
             //group.MapGet("/history", GetCommandesHistory);
             return group;
         }
@@ -66,7 +66,7 @@ namespace RestauSimplon.Routes
             Tags = new[] { "Commandes" }
         )]
         [SwaggerResponse(200, "OK", typeof(IEnumerable<CommandeItemDTO>))]
-        static async Task<IResult> History(RestauDbContext db)
+        static async Task<IResult> HistoryCommandes(RestauDbContext db)
         {
             if (await db.Commande.CountAsync() == 0)
             {
