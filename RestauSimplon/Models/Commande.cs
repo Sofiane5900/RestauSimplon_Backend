@@ -6,12 +6,8 @@ namespace RestauSimplon.Models
     public class Commande
     {
         public int Id { get; }
-
-        // Ceci réprésente la clé étrangère de la table Client
-        public int ClientId { get; }
-
-        // Ceci represente la relation avec la table Client
-        public Client Client { get; set; }
+        public int ClientId { get; } // Ceci réprésente la clé étrangère de la table Client
+        public Client Client { get; set; } // Ceci represente la relation avec la table Client
         public DateTime Date { get; set; }
         public decimal PrixTotal { get; set; }
 
@@ -20,6 +16,13 @@ namespace RestauSimplon.Models
 
         // Ceci represente la relation avec la table CommandeArticle
         public ICollection<CommandeArticle> CommandeArticles { get; set; }
+
+        // Constructor to initialize the collections
+        public Commande()
+        {
+            Articles = new List<Article>();
+            CommandeArticles = new List<CommandeArticle>();
+        }
     }
 
     public class CommandeItemDTO
@@ -29,5 +32,11 @@ namespace RestauSimplon.Models
         public DateTime Date { get; set; }
         public IEnumerable<ArticleItemDTO> Articles { get; set; }
         public decimal PrixTotal { get; set; }
+    }
+
+    public class CommandePostDTO
+    {
+        public int ClientId { get; set; }
+        public required List<int> ArticleIds { get; set; }
     }
 }

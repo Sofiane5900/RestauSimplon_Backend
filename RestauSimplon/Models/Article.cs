@@ -39,6 +39,18 @@ namespace RestauSimplon.Models
             this.CategorieId = article.CategorieId;
         }
     }
+
+    public class ArticlePostDTO
+    {
+        [SwaggerSchema("Nom de l'article")]
+        public string Nom { get; set; }
+
+        [SwaggerSchema("Catégorie de l'article")]
+        public int CategorieId { get; set; }
+
+        [SwaggerSchema("Prix de l'article")]
+        public decimal Prix { get; set; }
+    }
 }
 
 /* Ceci est un commentaire (lol) */

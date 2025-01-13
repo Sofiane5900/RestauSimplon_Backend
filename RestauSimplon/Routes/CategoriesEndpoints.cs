@@ -32,6 +32,13 @@ namespace RestauSimplon.Routes
         static async Task<IResult> CreateCategorie(CategorieDTO categorieDTO, RestauDbContext db)
         {
             var categorie = new Categorie { Nom = categorieDTO.Nom };
+
+            if (string.IsNullOrEmpty(categorieDTO.Nom))
+            {
+                return Results.BadRequest(
+                    "Erreur, veuillez renseignez tout les champs correctement."
+                );
+            }
             db.Categorie.Add(categorie);
             await db.SaveChangesAsync();
             return TypedResults.Created($"/categories/{categorie.Id}", new CategorieDTO(categorie));

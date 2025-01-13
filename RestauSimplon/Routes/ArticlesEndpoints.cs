@@ -63,7 +63,7 @@ namespace RestauSimplon.Routes
             Tags = new[] { "Articles" }
         )]
         [SwaggerResponse(200, "OK!", typeof(IEnumerable<ArticleItemDTO>))]
-        static Task<IResult> CreateArticle(ArticleItemDTO articleDTO, RestauDbContext db)
+        static async Task<IResult> CreateArticle(ArticlePostDTO articleDTO, RestauDbContext db)
         {
             var article = new Article
             {
@@ -72,11 +72,17 @@ namespace RestauSimplon.Routes
                 CategorieId = articleDTO.CategorieId,
             };
 
+            // Si les champ nom/categorieId sont vide ou le prix est inférieur a 0, j'envoie une bad request (400)
+            if (string.IsNullOrEmpty(article.Nom) || article.Prix < 0 || article.CategorieId == 0)
+            {
+                return Results.BadRequest(
+                    "Erreur, veuillez renseignez tout les champs correctement."
+                );
+            }
+
             db.Article.Add(article);
-            db.SaveChanges();
-            return Task.FromResult<IResult>(
-                Results.Created($"/articles/{article.Id}", new ArticleItemDTO(article))
-            );
+            await db.SaveChangesAsync();
+            return TypedResults.Created($"/articles/{article.Id}", new ArticleItemDTO(article));
         }
 
         // PUT - Mettre a jour un article
@@ -86,10 +92,10 @@ namespace RestauSimplon.Routes
             OperationId = "UpdateArticle",
             Tags = new[] { "Articles" }
         )]
-        [SwaggerResponse(200, "OK!", typeof(IEnumerable<ArticleItemDTO>))]
+        [SwaggerResponse(200, "OK!", typeof(IEnumerable<ArticlePostDTO>))]
         static async Task<IResult> UpdateArticle(
             int Id,
-            ArticleItemDTO articleDTO,
+            ArticlePostDTO articlePostDTO,
             RestauDbContext db
         )
         {
@@ -100,9 +106,9 @@ namespace RestauSimplon.Routes
                 return Results.NotFound();
             }
 
-            articleToUpdate.Nom = articleDTO.Nom;
-            articleToUpdate.CategorieId = articleDTO.CategorieId;
-            articleToUpdate.Prix = articleDTO.Prix;
+            articleToUpdate.Nom = articlePostDTO.Nom;
+            articleToUpdate.CategorieId = articlePostDTO.CategorieId;
+            articleToUpdate.Prix = articlePostDTO.Prix;
             await db.SaveChangesAsync();
 
             return TypedResults.NoContent();
